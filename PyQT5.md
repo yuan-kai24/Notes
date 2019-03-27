@@ -84,6 +84,7 @@ class Example(QWidget):
         self.initUI()
 
     def initUI(self):
+        # 定位，宽高
         self.setGeometry(100, 100, 600, 400)
         self.setWindowTitle('Object')
         self.show()
@@ -105,6 +106,71 @@ cp = QDesktopWidget().availableGeometry().center()
 qr.moveCenter(cp)
 # 移动了应用窗口的左上方的点到qr矩形的左上方的点，因此居中显示在的屏幕上。
 self.move(qr.topLeft())
+```
+
+## 布局
+
+### 绝对定位
+
+默认为绝对定位，绝对定位使用方便，但很有可能在不同的分辨率，不同平台出现问题，PyQT5是一套跨平台的窗体框架，使用绝对定位时也遵循当前系统规则。
+
+绝对定位需要使用move来定位。
+
+### 框布局
+
+使用QHBoxLayout和QVBoxLayout，来分别创建横向布局和纵向布局。
+
+```python
+# 水平布局
+hbox = QHBoxLayout()
+# 拉伸因子
+hbox.addStretch(1)
+#组件前的伸展增加了一个可伸缩的空间。这将推动他们靠右显示。
+hbox.addWidget(组件)
+# 垂直布局
+vbox = QVBoxLayout()
+# 创建一个垂直布局，并添加伸展因子，让水平布局显示在窗口底部
+vbox.addStretch(1)
+vbox.addLayout(hbox)
+# 设置窗口的布局界面
+self.setLayout(vbox)    
+```
+
+### 表格布局
+
+表格布局将空间划分为行和列。我们使用QGridLayout类创建一个网格布局。
+
+```python
+# 创建QGridLayout的实例并设置应用程序窗口的布局。
+grid = QGridLayout()
+self.setLayout(grid)
+
+# 设置表格名字
+names = ['Cls', 'Bck', '', 'Close',
+         '7', '8', '9', '/',
+        '4', '5', '6', '*',
+         '1', '2', '3', '-',
+        '0', '.', '=', '+']
+# 创建一个网格中的位置的列表（五行四列）。
+positions = [(i,j) for i in range(5) for j in range(4)]
+
+# 创建按钮并使用addWidget()方法添加到布局中。
+for position, name in zip(positions, names):
+    button = QPushButton(name)
+    grid.addWidget(button, *position)
+```
+
+创建一个网格布局和设置组件之间的间距。
+
+```python
+grid = QGridLayout()
+grid.setSpacing(10)
+```
+
+在添加一个小的控件到网格的时候,可以提供小部件的行和列跨。reviewEdit控件跨度5行。
+
+```python
+grid.addWidget(reviewEdit, 3, 1, 5, 1)
 ```
 
 ## 图标设置
@@ -130,6 +196,15 @@ btn.resize(btn.sizeHint())
 # 设置位置
 btn.move(50, 50)
 ```
+
+## 标签
+
+```python
+lbl = QLabel('Zetcode', self)
+lbl.move(15, 10)
+```
+
+
 
 ## 鼠标指向提示框
 
