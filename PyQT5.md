@@ -257,3 +257,47 @@ def closeEvent(self, event):
         # 忽略将关闭事件。
         event.ignore()
 ```
+
+## 菜单工具栏
+
+### 状态栏
+
+```python
+# 需要用QMainWindow创建状态栏的小窗口。
+self.statusBar().showMessage('Ready')
+```
+
+### 菜单栏
+
+```python
+# 创建事件（设置图标，退出标签，装载位置）
+exitAction = QAction(QIcon('exit.png'), '&Exit', self)        
+# 设置快捷键
+exitAction.setShortcut('Ctrl+Q')
+# 鼠标悬停时状态栏提示
+exitAction.setStatusTip('Exit application')
+# 调用的方法
+exitAction.triggered.connect(qApp.quit)
+
+self.statusBar()
+
+#创建一个菜单栏
+menubar = self.menuBar()
+#添加菜单
+fileMenu = menubar.addMenu('&File')
+#添加事件
+fileMenu.addAction(exitAction)
+```
+
+### 工具栏
+
+```python
+ exitAction = QAction(QIcon('resource/web.ico'), 'Exit', self)
+ exitAction.setShortcut('Ctrl+Q')
+ exitAction.triggered.connect(qApp.quit)
+
+ # 添加自身的工具栏到自身
+ self.toolbar = self.addToolBar('Exit')
+ self.toolbar.addAction(exitAction)
+```
+
