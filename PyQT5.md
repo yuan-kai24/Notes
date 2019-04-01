@@ -301,3 +301,86 @@ fileMenu.addAction(exitAction)
  self.toolbar.addAction(exitAction)
 ```
 
+## 事件和信号
+
+### 信号
+
+```python
+# 数字显示
+lcd = QLCDNumber(self)
+# 滑块
+sld = QSlider(Qt.Horizontal, self)
+# 设置布局
+vbox = QVBoxLayout()
+# 装载
+vbox.addWidget(lcd)
+vbox.addWidget(sld)
+# 添加
+self.setLayout(vbox)
+# 将滚动条的valueChanged信号连接到lcd的display插槽。
+# sld是发出信号的对象。lcd是接收信号的对象。display(插槽)是对信号做出反应的方法。
+# 插槽可以是自定义的
+sld.valueChanged.connect(lcd.display)
+```
+
+### 事件处理器
+
+```python
+def initUI(self):      
+	self.setGeometry(300, 300, 250, 150)
+	self.setWindowTitle('Event handler')
+	self.show()
+
+def keyPressEvent(self, e):
+	if e.key() == Qt.Key_Escape:
+	self.close()
+```
+
+## 对话框
+
+### QInputDialog
+
+```python
+# 新建对话框，返回输入文本和状态
+# 第一个字符串是一个对话框标题,第二个是对话框中的消息。对话框返回输入的文本和一个布尔值。点击Ok按钮,布尔值是True。
+text, ok = QInputDialog.getText(self, 'Input Dialog', 'Enter your name:')
+
+```
+
+### QColorDialog
+
+```python
+# 初始化QFrame的颜色为黑色(可用于标签，按钮)
+col = QColor(0, 0, 0)
+# 弹出QColorDialog
+ncol = QColorDialog.getColor()
+# 
+if col.isValid():
+    self.frm.setStyleSheet("QWidget { background-color: %s }"% ncol.name())
+```
+
+### QFontDialog
+
+其实都差不多，不过尔尔
+
+```python
+# 获取选中的文字配置
+font, ok = QFontDialog.getFont()
+# 配置
+if ok:
+	self.lbl.setFont(font)
+```
+
+### QFileDialog
+
+```python
+# 弹出QFileDialog对话框，第一个字符串参数是对话框的标题，第二个指定对话框的工作目录，默认情况下文件筛选器会匹配所有类型的文件(*)
+fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')
+# 读取了选择的文件并将文件内容显示到了TextEdit控件。
+if fname[0]:
+    f = open(fname[0], 'r')
+    with f:
+        data = f.read()
+        self.textEdit.setText(data)   
+```
+
