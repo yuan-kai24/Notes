@@ -197,11 +197,66 @@ btn.resize(btn.sizeHint())
 btn.move(50, 50)
 ```
 
+## 开关按钮
+
+ToggleButton是QPushButton的一种特殊模式。它是一个有两种状态的按钮：按下与未按下。通过点击在这两种状态间来回切换。
+
+```python
+# 创建一个QPushButton.
+redb = QPushButton('Red', self)
+# 通过其setCheckable()方法来得到一个ToggleButton。
+redb.setCheckable(True)
+# 将clicked信号连接到用户自定义的方法。通过clicked信号操作一个布尔值。
+redb.clicked[bool].connect(self.setColor)
+```
+
+## 滑动条
+
+```python
+# 创建一个水平滑块
+sld = QSlider(Qt.Horizontal, self)
+sld.setFocusPolicy(Qt.NoFocus)
+# 把valueChanged 信号连接到我们自定义的 changeValue()方法上。
+sld.valueChanged[int].connect(self.changeValue)
+```
+
 ## 标签
 
 ```python
 lbl = QLabel('Zetcode', self)
 lbl.move(15, 10)
+```
+
+## 多选框
+
+```python
+# 初始化
+cb = QCheckBox('Show title', self)
+# 默认选中
+cb.toggle()
+# 事件
+cb.stateChanged.connect(self.changeTitle)
+```
+
+## 进度条
+
+```python
+# 初始化进度条
+self.pbar = QProgressBar(self)
+# 设置进度0--100
+self.pbar.setValue(10)
+```
+
+## 日历
+
+```python
+# 初始化
+cal = QCalendarWidget(self)
+
+cal.setGridVisible(True)
+cal.move(20, 20)
+# 如果我们从部件中选择一个日期，就会发送信号。。。。就是事件
+cal.clicked[QDate].connect(self.showDate)
 ```
 
 
