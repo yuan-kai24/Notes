@@ -259,7 +259,55 @@ cal.move(20, 20)
 cal.clicked[QDate].connect(self.showDate)
 ```
 
+## 图像
 
+这玩意应该是需要一个依赖作为媒介才能显示的。
+
+```python
+# 创建一个图像控件
+pixmap = QPixmap("icon.png")
+# 放入label中显示
+lbl = QLabel(self)
+lbl.setPixmap(pixmap)
+```
+
+## 单行输入框
+
+QLineEdit是用于输入或编辑单行文本的控件。它还有撤销重做、剪切复制和拖拽功能。
+
+```python
+# 创建输入框
+qle = QLineEdit(self)
+# 设置类容改变事件
+qle.textChanged[str].connect(self.onChanged)
+```
+
+## 下拉列表框
+
+```python
+# 创建下拉列表框并添加元素
+combo = QComboBox(self)
+combo.addItem("元素1")
+...
+# 添加选中事件
+combo.activated[str].connect(self.onActivated) 
+```
+
+
+
+## 分隔控件
+
+分为纵向与横向分布。
+
+```python
+# 使用一个横向分布的切割面板
+splitter1 = QSplitter(Qt.Horizontal)
+splitter1.addWidget(topleft)
+splitter1.addWidget(topright)
+# 使用一个纵向的切割面板
+splitter2 = QSplitter(Qt.Vertical)
+splitter2.addWidget(splitter1)
+```
 
 ## 鼠标指向提示框
 
