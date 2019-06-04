@@ -518,8 +518,37 @@ order by 做排序，**<u>顺序</u>**得和索引一样，不然会出现这种
 
 ### 查询篇
 
+#### exists与in
+
+select * from table where exists (select * from order where user.id = order.user_id)
+
+exists会先查前面的表（user)  然后再和后面的表（order）关联筛选出结果
+
+select * from table where in (select user_id from order)
+
+in会先查后面的表（order)然后再和前面的表（user）关联筛选出结果
+
+ 
+
+所以外层的表数据量大的时候使用in，反之则用exists
+
 ### 插入篇
 
+#### replace
+
+一般这玩意是用来替换字符串的，但在mysql中有其他用法。
+
+可以用来插入数据，如果不存在此主键，则插入此记录，如果存在，则替换，免掉了后端再次判断的麻烦，同时也避免插入重复数据的麻烦。
+
+插入数据的表必须有主键或者是唯一索引！否则的话，replace into 会直接插入数据，这将导致表中出现重复的数据。
+
 ### 更新篇
+
+```sql
+update  table1 t  set t.column1 =0 where t.id in (select id from table2)  
+-- 改为下列会好很多
+update table1 t ,table2 b set t.column1=0 where t.id=b.id  
+
+```
 
 ### 删除篇
