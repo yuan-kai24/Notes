@@ -468,6 +468,8 @@ possible_keys与key关系，理论应该用到哪些索引，实际用到了哪�
 
 使用like，操作通配符时，把%放到开头，就会导致索引失效。
 
+not in 是不能命中索引
+
 %在最前时，索引变得扑朔迷离，不能匹配。
 
 当一个字符串字段匹配其他类型时，也会导致索引失效。
@@ -528,7 +530,7 @@ select * from table where in (select user_id from order)
 
 in会先查后面的表（order)然后再和前面的表（user）关联筛选出结果
 
- 
+
 
 所以外层的表数据量大的时候使用in，反之则用exists
 
