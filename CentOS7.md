@@ -7,8 +7,8 @@
 ```shell
 # 打开目录
 cd 
-# 创建文件夹
-mkdir
+# 创建文件夹(-p多个)
+mkdir -p
 # 删除
 rm -rf
 # 解压tar.gz
@@ -25,11 +25,15 @@ yum install xorg-x11-xauth -y
 yum -y install vim
 # 重启
 reboot
+# 给文件夹设置权限
+chmod -R 777 xxx
+# 查看某服务（服务名可以使用关键字）
+ps -ef|frep 服务名
 ```
 
 
 
-## nohup使用
+## nohup用
 
 用于不间断运行，需要安装coreutils
 
@@ -62,9 +66,9 @@ firewall-cmd --state
 # 查看开放端口
 firewall-cmd --list-ports 
 # 开启端口
-firewall-cmd --zone=public --add-port=80/tcp --permanent  
+firewall-cmd --zone=public --add-port=端口/tcp --permanent  
 # 关闭端口
-firewall-cmd --remove-port=80/tcp --permanent
+firewall-cmd --remove-port=端口/tcp --permanent
 命令含义:
 –zone #作用域
 –add-port=80/tcp #添加端口，格式为：端口/通讯协议
@@ -89,6 +93,8 @@ firewall-cmd --reload
 ## 端口
 
 ```shell
+# 安装
+yum install net-tools
 # 查看端口和pid
 netstat -lnp
 # 杀死端口
@@ -257,5 +263,75 @@ tail
 -n # 后面接数字，代表显示几行的意思
 -f # 表示持续侦测后面所接的文件名，要等到按下[ctrl]-c才会结束tail的侦测
 
+```
+
+## SVN
+
+```shell
+# 安装
+yum install subversion
+# 查看是否成功
+svnserve --version
+mkdir -p /var/svn
+# 创建目录
+mkdir -p /var/svn/mypro
+# 创建仓库
+svnadmin create /var/svn/mypro
+```
+
+目录说明
+
+```properties
+# hooks目录：放置hook脚步文件的目录
+# locks目录：用来放置subversion的db锁文件和db_logs锁文件的目录，用来追踪存取文件库的客户端
+# format目录：是一个文本文件，里边只放了一个整数，表示当前文件库配置的版本号
+# conf目录：是这个仓库配置文件（仓库用户访问账户，权限）
+```
+
+配置
+
+```shell
+# conf配置
+# passd配置
+username=password
+# -----------------------------------------------
+# svnserver.conf配置
+# 读写
+anon-access = read
+auth-access = write
+# 账户配置
+password-db = passwd 
+# 权限配置
+authz-db = authz
+# 此处写仓库路径
+realm = /var/svn/mypro
+# -----------------------------------------------
+# authz配置
+# 在group下配置
+# 创建username组xxx为成员
+admin = u1,u2
+user = u3
+[/xxx]
+# 读写
+@admin = rw
+# 只读
+@user = r
+# 表示除了上面设置的权限用户组以外，其他所有用户都设置空权限，空权限表示禁止访问本目录，这很重要一定要加上。
+*=
+```
+
+启动与关闭
+
+```shell
+ # 启动 --listen-port=3690可以省略
+ svnserve -d -r /var/svn/mypro --listen-port=3690
+ # 关闭
+ killall svnserve
+```
+
+客户端
+
+```shell
+ # svn://服务器地址/mypro
 ```
 
