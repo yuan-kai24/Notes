@@ -81,3 +81,12 @@ maven
 </dependency>
 ```
 
+## ab测试
+
+```shell
+ab -n 100 -c 10 http://test_url
+# -n 表示请求数，-c 表示并发数. -t 表示多少s内并发和请求
+```
+
+
+

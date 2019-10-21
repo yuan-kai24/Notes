@@ -544,6 +544,37 @@ in会先查后面的表（order)然后再和前面的表（user）关联筛选�
 
 插入数据的表必须有主键或者是唯一索引！否则的话，replace into 会直接插入数据，这将导致表中出现重复的数据。
 
+#### 用户操作
+
+```mysql
+-- 创建用户
+
+CREATE USER 'dog'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'pig'@'192.168.1.101_' IDENDIFIED BY '123456';
+CREATE USER 'pig'@'%' IDENTIFIED BY '123456';
+CREATE USER 'pig'@'%' IDENTIFIED BY '';
+CREATE USER 'pig'@'%';
+-- 授权
+-- privileges：用户的操作权限，如SELECT，INSERT，UPDATE等，如果要授予所的权限则使用ALL
+-- databasename：数据库名
+-- tablename：表名，如果要授予该用户对所有数据库和表的相应操作权限则可用*表示，如*.*
+GRANT privileges ON databasename.tablename TO 'username'@'host'
+-- 用以上命令授权的用户不能给其它用户授权，如果想让该用户可以授权，用以下命令:
+GRANT privileges ON databasename.tablename TO 'username'@'host' WITH GRANT OPTION;
+-- 改密码
+SET PASSWORD FOR 'username'@'host' = PASSWORD('newpassword');
+-- 当前用户修改
+SET PASSWORD = PASSWORD("newpassword");
+-- 撤销用户权限
+-- 假如你在给用户'pig'@'%'授权的时候是这样的（或类似的）：GRANT SELECT ON test.user TO 'pig'@'%'，则在使用REVOKE SELECT ON *.* FROM 'pig'@'%';命令并不能撤销该用户对test数据库中user表的SELECT 操作。相反，如果授权使用的是GRANT SELECT ON *.* TO 'pig'@'%';则REVOKE SELECT ON test.user FROM 'pig'@'%';命令也不能撤销该用户对test数据库中user表的Select权限。
+-- 具体信息可以用命令SHOW GRANTS FOR 'pig'@'%'; 查看。
+REVOKE privilege ON databasename.tablename FROM 'username'@'host';
+-- 删除用户
+DROP USER 'username'@'host';
+```
+
+
+
 ### 更新篇
 
 ```sql
