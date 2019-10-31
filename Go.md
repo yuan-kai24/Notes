@@ -50,8 +50,10 @@ const(
 )
 
 // 数组
-a := [...]类型{value1, value2,...}
-
+a := [...]类型{value1, value2,...} // 自动初始化
+a := [num]类型{value1 * num} // 初始化固定个数
+a := [num1][num2]类型{{value1 * num1},{value * num2}}
+a[n]  // 访问也是通过下标访问
 ```
 
 不支持隐式类型转换
@@ -74,6 +76,15 @@ a := [...]类型{value1, value2,...}
 
 循环只有for，没有（）
 
+```go
+arr3 := [...]int{1,3,4,5}
+for _, e := range arr3{
+	t.Log(e)
+}
+```
+
+
+
 判断也没有（）
 
 **技巧**
@@ -89,7 +100,32 @@ if v,err := function(); err==nil{
 }
 ```
 
-switch不用加break，没有case穿透问题
+switch，没有 （），不用加break，没有case穿透问题
+
+```go
+for i := 1; i < 6; i++ {
+	switch i {
+		case 1,3,5:
+			t.Log("Even")
+		case 2,4:
+			t.Log("Odd")
+    }
+}
+for i := 1; i < 6; i++ {
+    switch {
+		case i%2 == 0:
+			t.Log("Even")
+		case i%2 == 1:
+			t.Log("Odd")
+    }
+}
+```
+
+### 数组截取
+
+与Python类似，但是不支持[:-1]这种操作
+
+a[开始索引（包含）：结束索引(不包含)]
 
 ## 常用函数篇
 
