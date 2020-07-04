@@ -585,3 +585,15 @@ update table1 t ,table2 b set t.column1=0 where t.id=b.id
 ```
 
 ### 删除篇
+
+
+
+
+
+### 主从复制
+
+```mysql
+# 设置gtid_mode
+set @@global.enforce_gtid_consistency=ON
+```
+

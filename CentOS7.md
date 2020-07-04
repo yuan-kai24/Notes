@@ -29,11 +29,17 @@ reboot
 chmod -R 777 xxx
 # 查看某服务（服务名可以使用关键字）
 ps -ef|frep 服务名
+ps -a
+# 查看端口进程
+netstat -lnp|grep 8000
+netstat -lnp
+netstat -lntp
+netstat -ap
 ```
 
 
 
-## nohup用
+## nohup
 
 用于不间断运行，需要安装coreutils
 
@@ -57,6 +63,45 @@ yum install rng-tools # 安装rngd服务（熵服务，增大熵池）
 systemctl enable rngd # 设置服务enable,启动机器就启动服务 
 systemctl start rngd # 启动服务
 ```
+
+## Tomcat
+
+/usr/lib/systemd/system/目录下新建文件tomcat9.service
+
+```shell
+[Unit] 
+Description=Tomcat9
+After=syslog.target network.target remote-fs.target nss-lookup.target 
+ 
+[Service] 
+Type=forking
+Environment='CATALINA_PID=/usr/local/tomcat/tomcat9.0.34/bin/tomcat.pid'                
+Environment='CATALINA_HOME=/usr/local/tomcat/tomcat9.0.34'
+Environment='CATALINA_BASE=/usr/local/tomcat/tomcat9.0.34'
+Environment='CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC' 
+ 
+WorkingDirectory=/usr/local/tomcat/tomcat9.0.34
+ 
+ExecStart=/usr/local/tomcat/tomcat9.0.34/bin/startup.sh
+ExecReload=/bin/kill -s HUP $MAINPID 
+ExecStop=/bin/kill -s QUIT $MAINPID 
+PrivateTmp=true 
+ 
+[Install] 
+WantedBy=multi-user.target 
+```
+
+C，设置为开启机启动：`systemctl enable tomcat7`
+
+**4、启停服务**
+
+A,启动服务：`systemctl start tomcat7`
+
+B,停止服务：`systemctl stop tomcat7`
+
+C,重启服务：`systemctl restart tomcat7`
+
+检查状态：`systemctl status tomcat7`
 
 ## 防火墙
 
@@ -98,6 +143,36 @@ yum install net-tools
 # 查看端口和pid
 netstat -lnp
 # 杀死端口
+```
+
+## 网络配置
+
+cd /etc/sysconfig/network-scripts/
+
+vim ifcfg-ens33
+
+```shell
+TYPE=Ethernet
+PROXY_METHOD=none
+BROWSER_ONLY=no
+BOOTPROTO=static
+DEFROUTE=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_FAILURE_FATAL=no
+IPV6_ADDR_GEN_MODE=stable-privacy
+NAME=ens33
+UUID=a371e1e5-1340-46a9-a3cf-29a8d80f7a7a
+DEVICE=ens33
+# 重要配置
+ONBOOT=yes
+IPADDR=192.168.2.114
+NETMASK=255.255.255.0
+GATEWAY=192.168.2.1
+DNS1=218.85.152.99
+DNS2=8.8.8.8
 ```
 
 ## 转码
@@ -264,18 +339,7 @@ cd /root/nginx-1.8.0
 配置
 
 ```shell
-./configure \
---prefix=/usr/local/nginx \
---pid-path=/var/run/nginx/nginx.pid \
---lock-path=/var/lock/nginx.lock \
---error-log-path=/var/log/nginx/error.log \
---http-log-path=/var/log/nginx/access.log \
---with-http_gzip_static_module \
---http-client-body-temp-path=/var/temp/nginx/client \
---http-proxy-temp-path=/var/temp/nginx/proxy \
---http-fastcgi-temp-path=/var/temp/nginx/fastcgi \
---http-uwsgi-temp-path=/var/temp/nginx/uwsgi \
---http-scgi-temp-path=/var/temp/nginx/scgi
+./configure # 使用默认配置
 ```
 
 ​	编译，安装
@@ -285,6 +349,8 @@ make && make  install
 ```
 
 ​	创建目录
+
+可以./nginx -t  看看需不需要创建
 
 ```shell
 mkdir /var/temp
@@ -480,11 +546,41 @@ server{
 
 开启保护模式：protected-mode yes
 
+设置密码：requirpass xxxx
+
 改为：
 
 bind 0.0.0.0 或者禁用
 
 protected-mode no  
+
+```shell
+sudo yum update
+yum install wget
+mkdir /usr/local/redis
+cd /usr/local/redis
+wget http://download.redis.io/releases/redis-4.0.4.tar.gz
+tar xzf redis-4.0.4.tar.gz
+cd redis-4.0.4
+make
+#创建目录：
+mkdir /usr/local/redis/bin
+
+#拷贝编译后的执行程序到/usr/local/redis/bin目录下：
+cp mkreleasehdr.sh redis-benchmark redis-check-aof  redis-cli redis-sentinel redis-server /usr/local/redis/bin/
+
+#创建目录：
+mkdir /usr/local/redis/etc
+
+#拷贝配置文件到/usr/local/redis/etc目录下：
+cp redis.conf /usr/local/redis/etc
+
+#执行以下指令，Redis将以非控制台运行：
+/usr/local/redis/bin/redis-server    /usr/local/redis/etc/redis.conf
+
+```
+
+
 
 ## 欢迎语
 
@@ -592,4 +688,81 @@ user = u3
 ```shell
  # svn://服务器地址/mypro
 ```
+
+
+
+
+
+## RabbitMQ
+
+1. 安装erlang
+        因为rabbitmq是erlang语言开发，所以要先安装erlang
+
+yum install erlang
+2. 下载rpm包
+ wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.15/rabbitmq-server-3.6.15-1.el7.noarch.rpm
+3. 下载完成后安装
+yum install rabbitmq-server-3.6.15-1.el7.noarch.rpm
+4. 安装完后重启服务
+service rabbitmq-server start
+5. 查看服务状态
+service rabbitmq-server status
+6. 安装插件
+/sbin/rabbitmq-plugins enable rabbitmq_management 
+        重启服务
+
+service rabbitmq-server restart
+        这个时候就能访问http://ip:15672访问到页面了，默认的账号密码是guest/guest。
+
+        但是从3.3.0版本开始，禁止使用guest/guest登录localhost之外的访问。解决办法是，找到
+
+ /usr/lib/rabbitmq/lib/rabbitmq_server-3.6.15/ebin/rabbit.app文件中的：
+
+{loopback_users, [<<"guest">>]},
+        修改为：
+
+{loopback_users, []},
+        然后重启即可。
+
+
+
+## fastDFS
+
+```shell
+fastdfs-5.05 
+# 安装
+make.sh && make.sh install
+
+# 复制conf下所有文件到/etc/fdfs/下
+cp * /etc/fdfs
+
+# ....
+libfastcommon-1.0.7  
+# make.sh && make.sh install 后在lib64中的libfastcommon.so拷贝到usr/lib下
+# 在想存文件的地方创建storage,tmp,client,tracker文件
+
+fastdfs-nginx-module    --- nginx模型
+
+# 解压后需要配置conf  删除local
+
+# 复制mod_fastdfs.conf到/etc/fdfs/下
+
+# 修改/etc/fdfs中的一系列conf
+
+ # fdfs_storaged   启动仓库
+ # fdfs_monitor storage.conf查看配置    
+ # fdfs_test upload 文件  上传文件   
+ # fdfs_trackerd  启动tracker
+
+```
+
+
+
+nginx :
+
+ngx_fastdfs_module
+
+--add-module=/usr/local/fastDFS/fastdfs-nginx-module/src
+
+
 

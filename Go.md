@@ -127,8 +127,68 @@ for i := 1; i < 6; i++ {
 
 a[开始索引（包含）：结束索引(不包含)]
 
+### Map
+
+```go
+m := map[string]int{"one": 1, "two": 2,...}
+
+m1 := map[string]int{}
+
+m1["one"] = 1
+
+m2 := make(map[string]int, 10/*Initial Capacity*/)
+```
+
+**判断key,value是否存在**
+
+```go
+if v, ok := m[1]; ok {
+    t.Log(ok, v)
+} else {
+    t.Log("不存在")
+}
+```
+
+**遍历**
+
+```go
+for k,v := range m{
+    t.Log(k, " ", v)
+}
+```
+
+**函数调用**
+
+```go
+m:=map[int]func(op int)int{}
+m[1]=func(op int) int {return op}
+m[2]=func(op int) int {return op*op}
+t.Log(m2[1](2))
+t.Log(m2[2](2))
+```
+
+### 字符串
+
+不可变的byte slice
+
+不能s[n] = 'x'来使用
+
+**Unicode & UTF-8**
+
+utf-8是Unicode的一种实现
+
+
+
 ## 常用函数篇
 
 **len**
 
 数组长度
+
+## VsCode篇
+
+```json
+# 测试无日志输出时，在工作区添加
+"go.testFlags": ["-v"]
+```
+
