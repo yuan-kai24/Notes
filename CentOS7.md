@@ -35,6 +35,8 @@ netstat -lnp|grep 8000
 netstat -lnp
 netstat -lntp
 netstat -ap
+# 修改服务器名称
+hostnamectl set-hostname
 ```
 
 
@@ -174,6 +176,8 @@ GATEWAY=192.168.2.1
 DNS1=218.85.152.99
 DNS2=8.8.8.8
 ```
+
+重启网卡：systemctl restart network
 
 ## 转码
 
