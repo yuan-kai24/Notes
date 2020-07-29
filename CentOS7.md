@@ -37,6 +37,10 @@ netstat -lntp
 netstat -ap
 # 修改服务器名称
 hostnamectl set-hostname
+# 远程拷贝命令  用户名@主机名:地址
+scp  -r 源数据 复制数据地址
+# 远程拷贝命令（不重复拷贝）  用户名@主机名:地址
+rsync  -rvl 源数据 复制数据地址
 ```
 
 
@@ -178,6 +182,14 @@ DNS2=8.8.8.8
 ```
 
 重启网卡：systemctl restart network
+
+## 免密登录
+
+生成公钥私钥：ssh-keygen -t rsa
+
+拷贝到相应服务器：ssh-copy-id yuankai5
+
+如果为主机名，则需要再hosts里配置，否则需要为ip
 
 ## 转码
 

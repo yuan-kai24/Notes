@@ -10,9 +10,19 @@ docker exec -it mysql /bin/bash
 
 docker rm -f id
 
+删除镜像
+
+docker rmi id
+
 查看日志
 
 docker logs -f id
+
+查看进程
+
+docker ps
+
+docker ps -all
 
 开始/通知/重启
 
@@ -29,6 +39,7 @@ docker update redis --restart=always
 docker pull mysql:5.7
 
 ```shell
+# 主机端口：内部端口
 docker run -p 3306:3306 --name mysql \
 -v /mydata/mysql/log:/var/log/mysql \
 -v /mydata/mysql/data:/var/lib/mysql \

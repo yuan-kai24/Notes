@@ -189,3 +189,11 @@ yarn-site.xml
 <value>604800</value>
 
 </property>
+
+
+
+在分布式的情况下，yarn只能在配置的指定节点下启动
+
+## HDFS
+
+块的大小设置主要取决于磁盘传输速率。
